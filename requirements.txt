@@ -1,6 +1,7 @@
+
 flask
 gunicorn
 numpy
 pillow
 opencv-python-headless
-reportlab
+reportla
