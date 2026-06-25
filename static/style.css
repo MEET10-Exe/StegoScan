@@ -94,3 +94,54 @@ hr {
     color: black;
     font-weight: bold;
 }
+.hero{
+    text-align:center;
+    padding:30px;
+}
+
+.tagline{
+    font-size:20px;
+    color:#00ff99;
+}
+
+.author{
+    color:#888;
+}
+
+.hero-stats{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-top:30px;
+}
+
+.hero-card{
+    background:#21262d;
+    width:220px;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,255,153,0.3);
+}
+
+.hero-card h3{
+    color:#00ff99;
+    font-size:32px;
+    margin:0;
+}
+
+.upload-box{
+    text-align:center;
+    padding:25px;
+    border:2px dashed #00ff99;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+button{
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}

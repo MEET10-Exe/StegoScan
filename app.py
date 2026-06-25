@@ -12,11 +12,20 @@ scan_count = 0
 
 
 @app.route("/")
+@app.route("/")
 def home():
     return render_template(
         "index.html",
-        result={"status": "Ready", "percentage": 0, "security_score": 100},
-        scan_count=0
+        result={
+            "status": "READY",
+            "percentage": 0,
+            "security_score": 100,
+            "format": "-",
+            "width": "-",
+            "height": "-"
+        },
+        scan_count=scan_count,
+        image_path=None
     )
 
 
