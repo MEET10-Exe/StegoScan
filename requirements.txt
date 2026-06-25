@@ -1,6 +1,6 @@
 flask
 gunicorn
 numpy
-opencv-python-headless
 pillow
+opencv-python-headless
 reportlab
