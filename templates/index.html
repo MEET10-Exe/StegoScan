@@ -21,6 +21,46 @@
             </label>
             <button type="submit" class="scan-btn">SCAN IMAGE</button>
         </form>
+        {% if image_path %}
+<div class="preview-card">
+    <h2>Uploaded Image</h2>
+    <img src="{{ image_path }}" class="preview-img">
+</div>
+{% endif %}
+
+{% if result %}
+<div class="result-card">
+
+    <h2>Security Report</h2>
+
+    <p>Status:
+        <span class="
+        {% if result.status == 'SAFE' %}
+            safe
+        {% elif result.status == 'MEDIUM RISK' %}
+            medium
+        {% else %}
+            danger
+        {% endif %}
+        ">
+        {{ result.status }}
+        </span>
+    </p>
+
+    <p>Risk Level: {{ result.percentage }}%</p>
+
+    <div class="progress">
+        <div class="bar"
+             style="width:{{ result.percentage }}%;">
+        </div>
+    </div>
+
+    <p>Security Score: {{ result.security_score }}/100</p>
+
+    <p>Format: {{ result.format }}</p>
+
+</div>
+{% endif %}
 
         <section class="stats">
             <h2>System Stats</h2>
