@@ -1,232 +1,75 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>StegoScan</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-<hr>
-
-<center>
-<p>
-StegoScan v2.0 |
-Cyber Security Hidden Data Detector
-</p>
-
-<p>
-Developed by Meet Vaghela
-</p>
-</center>
 
 <body>
 
+<center>
+    <h1>🛡️ StegoScan v2.0</h1>
+    <p>Cyber Security Hidden Data Detector</p>
+    <p>Developed by Meet Vaghela</p>
+</center>
+
 <div class="container">
 
-    <h1>🛡️ StegoScan</h1>
-
-    <h3>Cyber Security Hidden Data Detector</h3>
-
-    <form action="/scan"
-          method="POST"
-          enctype="multipart/form-data">
-
-        <input type="file"
-               name="image"
-               required>
-
+    <!-- UPLOAD FORM -->
+    <form action="/scan" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
         <br><br>
-
-        <button type="submit">
-            SCAN IMAGE
-        </button>
-
+        <button type="submit">SCAN IMAGE</button>
     </form>
+
+    <hr>
 
     {% if image_path %}
 
+    <!-- IMAGE + RESULT -->
+    <div style="display:flex; gap:20px; align-items:flex-start;">
+
+        <img src="{{ image_path }}" width="300">
+
+        <div>
+            <h2>Result</h2>
+            <p><b>Status:</b> {{ result.status }}</p>
+            <p><b>Risk:</b> {{ result.percentage }}%</p>
+            <p><b>Security Score:</b> {{ result.security_score }}</p>
+        </div>
+
+    </div>
+
     <hr>
 
-    <h2>Uploaded Image</h2>
-
-    <img src="{{ image_path }}"
-         width="450">
-
-    {% endif %}
-
-    {% if result %}
-
-    <hr>
-
-    <h2>Detection Dashboard</h2>
-
+    <!-- THREAT -->
     <h2>Threat Assessment</h2>
 
-{% if result.status == "HIGH RISK" %}
+    {% if result.status == "HIGH RISK" %}
+        <div>🔴 HIGH RISK DETECTED</div>
+    {% elif result.status == "MEDIUM RISK" %}
+        <div>🟠 SUSPICIOUS ACTIVITY</div>
+    {% else %}
+        <div>🟢 SAFE IMAGE</div>
+    {% endif %}
 
-<div class="threat high-threat">
-    🔴 HIGH RISK DETECTED
-</div>
+    <hr>
 
-{% elif result.status == "MEDIUM RISK" %}
-
-<div class="threat medium-threat">
-    🟠 SUSPICIOUS ACTIVITY
-</div>
-
-{% else %}
-
-<div class="threat low-threat">
-    🟢 SAFE IMAGE
-</div>
-
-{% endif %}
-
-    <div class="report">
-
-    <h2>Image Information</h2>
-
-    <p><b>File Name:</b> {{ filename }}</p>
-
-    <p><b>Format:</b> {{ result.format }}</p>
-
-    <p><b>Resolution:</b>
-       {{ result.width }} × {{ result.height }}
-    </p>
-
-    <p><b>Scan Time:</b> {{ scan_time }}</p>
-
-</div>
-
-    <div class="cards">
-
-        <div class="card">
-            <h3>Status</h3>
-            <p>{{ result.status }}</p>
-        </div>
-
-        <div class="card">
-            <h3>LSB Score</h3>
-            <p>{{ result.percentage }}%</p>
-        </div>
-
-        <div class="card">
-            <h3>Format</h3>
-            <p>{{ result.format }}</p>
-        </div>
-
-        <div class="card">
-            <h3>Resolution</h3>
-            <p>{{ result.width }} × {{ result.height }}</p>
-        </div>
-
-    </div>
-
-    <div class="report">
-<h3>Risk Meter</h3>
-
-<div class="meter">
-    <div class="meter-fill"
-         style="width: {{ result.percentage }}%;">
-         {{ result.percentage }}%
-    </div>
-</div>
-        <h2>Detection Report</h2>
-
-        <p><b>Status:</b> {{ result.status }}</p>
-
-        <p><b>Scan Time:</b> {{ scan_time }}</p>
-
-        <p><b>LSB Percentage:</b> {{ result.percentage }}%</p>
-        <h3>Risk Meter</h3>
-
-<div class="meter">
-
-{% if result.percentage >= 48 %}
-
-<div class="meter-fill high"
-     style="width: {{ result.percentage }}%;">
-     {{ result.percentage }}%
-</div>
-
-{% elif result.percentage >= 45 %}
-
-<div class="meter-fill medium"
-     style="width: {{ result.percentage }}%;">
-     {{ result.percentage }}%
-</div>
-
-{% else %}
-
-<div class="meter-fill low"
-     style="width: {{ result.percentage }}%;">
-     {{ result.percentage }}%
-</div>
-
-{% endif %}
-
-</div>
-
-        <p><b>Format:</b> {{ result.format }}</p>
-
-        <p><b>File Name:</b> {{ filename }}</p>
-
-        <p><b>Width:</b> {{ result.width }}</p>
-
-        <p><b>Height:</b> {{ result.height }}</p>
-
-    </div>
+    <!-- INFO -->
+    <h2>Image Info</h2>
+    <p>Format: {{ result.format }}</p>
+    <p>Resolution: {{ result.width }} × {{ result.height }}</p>
 
     {% endif %}
-    <hr>
-
-<h2>System Statistics</h2>
-
-<div class="cards">
-
-    <div class="card">
-    <h3>Total Scans</h3>
-    <p>{{ scan_count }}</p>
-</div>
-
-    <div class="card">
-    <h3>Security Score</h3>
-    <p>{{ result.security_score if result else 0 }}</p>
-</div>
-
-    <div class="card">
-    <h3>Analysis Type</h3>
-    <p>LSB</p>
-</div>
-
-<div class="card">
-<h3>Platform</h3>
-<p>Flask</p>
-</div>
-
-<div class="card">
-<h3>Language</h3>
-<p>Python</p>
-</div>
-
-<div class="card">
-<h3>Detection</h3>
-<p>Active</p>
-</div>
-
-</div>
 
     <hr>
 
-    <h2>About StegoScan</h2>
+    <!-- STATS -->
+    <h2>System Stats</h2>
 
-    <p>
-        StegoScan is a Cyber Security tool designed to detect
-        possible hidden data inside images using Least Significant
-        Bit (LSB) analysis. The system scans uploaded images,
-        analyzes pixel patterns and generates a risk assessment report.
-    </p>
+    <p>Total Scans: {{ scan_count }}</p>
+    <p>Platform: Flask + Python</p>
+    <p>Detection: Active</p>
 
 </div>
 

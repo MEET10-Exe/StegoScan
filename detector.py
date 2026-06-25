@@ -2,18 +2,15 @@ from PIL import Image
 import numpy as np
 
 def analyze_image(image_path):
-
-    image = Image.open(image_path)
+    image = Image.open(image_path).convert("RGB")
 
     width, height = image.size
-
     img_array = np.array(image)
 
     lsb_count = 0
     total = img_array.size
 
     for value in img_array.flatten():
-
         if value & 1:
             lsb_count += 1
 
@@ -27,10 +24,10 @@ def analyze_image(image_path):
         status = "LOW RISK"
 
     return {
-    "status": status,
-    "percentage": round(percentage, 2),
-    "width": width,
-    "height": height,
-    "format": image.format,
-    "security_score": round(100 - percentage, 2)
-}
+        "status": status,
+        "percentage": round(percentage, 2),
+        "width": width,
+        "height": height,
+        "format": image.format or "unknown",
+        "security_score": round(100 - percentage, 2)
+    }
