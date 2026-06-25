@@ -22,41 +22,31 @@ def index():
 
         file = request.files.get("file")
 
-        if file and file.filename != "":
+        if file and file.filename:
 
-            filename = file.filename
-            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+            filepath = os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                file.filename
+            )
 
             file.save(filepath)
 
+            image_path = "/" + filepath
+
             total_scans += 1
-
-            # -------------------------
-            # DEMO RESULT
-            # Replace with detector.py
-            # -------------------------
-
-            security_score = 82
-            risk_percentage = 18
 
             result = {
                 "status": "SAFE",
-                "percentage": risk_percentage,
-                "security_score": security_score,
-                "width": "Auto",
-                "height": "Auto",
-                "format": filename.split(".")[-1].upper(),
-                "time": datetime.now().strftime("%H:%M:%S")
+                "percentage": 18,
+                "security_score": 82,
+                "format": file.filename.split(".")[-1].upper()
             }
 
-            image_path = filepath
-
     return render_template(
-    "index.html",
-    total_scans=total_scans,
-    result=result,
-    image_path="/" + filepath
-)
-
+        "index.html",
+        total_scans=total_scans,
+        result=result,
+        image_path=image_path
+    )
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
