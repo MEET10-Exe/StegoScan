@@ -192,7 +192,7 @@ Developed by Meet Vaghela
 
     <div class="card">
     <h3>Security Score</h3>
-    <p>{{ result.security_score }}</p>
+    <p>{{ result.security_score if result else 0 }}</p>
 </div>
 
     <div class="card">

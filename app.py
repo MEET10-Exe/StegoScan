@@ -13,7 +13,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("index.html", result={"security_score": 0})
+
 
 @app.route("/scan", methods=["POST"])
 def scan():
@@ -54,6 +55,5 @@ def scan():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
-file = request.files["image"]
-filename = file.filename
+    if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
