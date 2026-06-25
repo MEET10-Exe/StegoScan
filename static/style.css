@@ -1,180 +1,96 @@
-body{
-    background: linear-gradient(135deg,#0d1117,#161b22);
-    color:white;
-    font-family:Arial, sans-serif;
-    margin:0;
-    padding:0;
+body {
+    background: #0d1117;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
 }
 
-.container{
-    width:85%;
-    max-width:1000px;
-    margin:auto;
-    margin-top:30px;
-    background:#161b22;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 0 25px #00ff88;
+.container {
+    max-width: 1100px;
+    margin: auto;
+    background: #161b22;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #00ff99;
 }
 
-h1{
-    color:#00ff88;
-    font-size:50px;
-    text-align:center;
-    text-shadow:0 0 10px #00ff88;
+h1 {
+    color: #00ff99;
+    text-align: center;
 }
 
-h2{
-    color:#58a6ff;
+h2 {
+    color: #00d9ff;
 }
 
-h3{
-    color:white;
+p {
+    color: #d1d5db;
 }
 
-button{
-    background:#00ff88;
-    color:black;
-    border:none;
-    padding:12px 25px;
-    border-radius:8px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:0.3s;
+input[type="file"] {
+    padding: 10px;
+    background: #21262d;
+    color: white;
+    border-radius: 8px;
 }
 
-button:hover{
-    transform:scale(1.05);
-    box-shadow:0 0 15px #00ff88;
+button {
+    background: #00ff99;
+    color: black;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-input[type=file]{
-    color:white;
-    padding:10px;
+button:hover {
+    background: #00cc77;
 }
 
-img{
-    border-radius:10px;
-    margin-top:10px;
-    width:100%;
-    max-width:500px;
-    box-shadow:0 0 15px #58a6ff;
+img {
+    border-radius: 10px;
+    border: 2px solid #00ff99;
 }
 
-.cards{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-    margin-top:20px;
+hr {
+    border: 1px solid #30363d;
 }
 
-.card{
-    flex:1;
-    min-width:180px;
-    background:#1f2937;
-    padding:20px;
-    border-radius:10px;
-    text-align:center;
-    box-shadow:0 0 12px #00ff88;
+.high {
+    background: #ff3b30;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
 }
 
-.card h3{
-    color:#00ff88;
+.medium {
+    background: #ff9500;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
 }
 
-.card p{
-    font-size:20px;
-    font-weight:bold;
+.low {
+    background: #34c759;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.progress {
+    width: 100%;
+    background: #30363d;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 25px;
 }
 
-.report{
-    margin-top:20px;
-    background:#1f2937;
-    padding:20px;
-    border-radius:10px;
-    border-left:5px solid #00ff88;
-}
-
-.report p{
-    font-size:18px;
-}
-
-hr{
-    border:1px solid #30363d;
-    margin:25px 0;
-}
-
-p{
-    line-height:1.6;
-}
-.meter{
-    width:100%;
-    height:35px;
-    background:#333;
-    border-radius:20px;
-    overflow:hidden;
-    margin-top:10px;
-}
-
-.meter-fill{
-    height:100%;
-    background:#00ff88;
-    text-align:center;
-    line-height:35px;
-    color:black;
-    font-weight:bold;
-}
-.meter{
-    width:100%;
-    height:35px;
-    background:#333;
-    border-radius:20px;
-    overflow:hidden;
-    margin-top:10px;
-}
-
-.meter-fill{
-    height:100%;
-    text-align:center;
-    line-height:35px;
-    font-weight:bold;
-    color:white;
-}
-
-.high{
-    background:red;
-}
-
-.medium{
-    background:orange;
-}
-
-.low{
-    background:green;
-}
-.threat{
-    margin-top:20px;
-    padding:15px;
-    border-radius:10px;
-    text-align:center;
-    font-size:22px;
-    font-weight:bold;
-}
-
-.high-threat{
-    background:#7f1d1d;
-    color:white;
-    box-shadow:0 0 15px red;
-}
-
-.medium-threat{
-    background:#78350f;
-    color:white;
-    box-shadow:0 0 15px orange;
-}
-
-.low-threat{
-    background:#14532d;
-    color:white;
-    box-shadow:0 0 15px lime;
+.progress-fill {
+    height: 100%;
+    background: #00ff99;
+    text-align: center;
+    color: black;
+    font-weight: bold;
 }

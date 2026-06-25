@@ -33,7 +33,13 @@
 
         <div>
             <h2>Result</h2>
-            <p><b>Status:</b> {{ result.status }}</p>
+            <p><b>Status:</b> {{ result.status }}</p> 
+            <div class="progress">
+    <div class="progress-fill"
+         style="width: {{ result.percentage }}%;">
+        {{ result.percentage }}%
+    </div>
+</div>
             <p><b>Risk:</b> {{ result.percentage }}%</p>
             <p><b>Security Score:</b> {{ result.security_score }}</p>
         </div>
@@ -46,12 +52,13 @@
     <h2>Threat Assessment</h2>
 
     {% if result.status == "HIGH RISK" %}
-        <div>🔴 HIGH RISK DETECTED</div>
-    {% elif result.status == "MEDIUM RISK" %}
-        <div>🟠 SUSPICIOUS ACTIVITY</div>
-    {% else %}
-        <div>🟢 SAFE IMAGE</div>
-    {% endif %}
+    <div class="high">🔴 HIGH RISK DETECTED</div>
+{% elif result.status == "MEDIUM RISK" %}
+    <div class="medium">🟠 SUSPICIOUS ACTIVITY</div>
+{% else %}
+    <div class="low">🟢 SAFE IMAGE</div>
+{% endif %}
+
 
     <hr>
 
