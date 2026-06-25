@@ -2,6 +2,11 @@ from flask import Flask, render_template, request
 from detector import analyze_image
 from datetime import datetime
 import os
+import os
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
 
 app = Flask(__name__)
 scan_count = 0
@@ -13,7 +18,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/")
 def home():
-    return render_template("index.html", result={"security_score": 0})
+    result = {"security_score": 0}
+    return render_template("index.html", result=result)
 
 
 @app.route("/scan", methods=["POST"])
@@ -55,5 +61,7 @@ def scan():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
