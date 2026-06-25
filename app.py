@@ -1,62 +1,30 @@
-from flask import Flask, render_template, request
-from detector import analyze_image
+from flask import Flask, render_template, request, redirect, url_for
 import os
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "static/uploads"
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# Counter for scans
+total_scans = 0
 
-scan_count = 0
+@app.route("/", methods=["GET", "POST"])
+def index():
+    global total_scans
+    if request.method == "POST":
+        file = request.files.get("file")
+        if file:
+            # Save uploaded file (optional)
+            upload_path = os.path.join("uploads", file.filename)
+            os.makedirs("uploads", exist_ok=True)
+            file.save(upload_path)
 
+            # Increase scan count
+            total_scans += 1
 
-@app.route("/")
-@app.route("/")
-def home():
-    return render_template(
-        "index.html",
-        result={
-            "status": "READY",
-            "percentage": 0,
-            "security_score": 100,
-            "format": "-",
-            "width": "-",
-            "height": "-"
-        },
-        scan_count=scan_count,
-        image_path=None
-    )
+            # Here you can call your StegoScan detection logic
+            # Example: result = detect_hidden_data(upload_path)
 
-
-@app.route("/scan", methods=["POST"])
-def scan():
-    global scan_count
-
-    file = request.files.get("image")
-
-    if not file:
-        return render_template(
-            "index.html",
-            result={"status": "No file uploaded", "percentage": 0, "security_score": 0},
-            scan_count=scan_count
-        )
-
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
-    file.save(filepath)
-
-    scan_count += 1
-
-    result = analyze_image(filepath)
-
-    return render_template(
-        "index.html",
-        result=result,
-        image_path="/" + filepath.replace("\\", "/"),
-        scan_count=scan_count
-    )
-
+            return render_template("index.html", total_scans=total_scans)
+    return render_template("index.html", total_scans=total_scans)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True)
