@@ -29,13 +29,12 @@ def allowed_file(filename):
 @app.route("/", methods=["GET", "POST"])
 def dashboard():
 
-    if "user" not in session:
-        session["user"] = "guest"
-
-    user = session["user"]
-
     result = None
     image_path = None
+
+    # SAFE SESSION HANDLING
+    if "user" not in session:
+        session["user"] = "guest"
 
     if "history" not in session:
         session["history"] = []
@@ -44,48 +43,36 @@ def dashboard():
         if request.method == "POST":
             file = request.files.get("file")
 
-            if not file or file.filename == "":
-                result = {"status": "ERROR", "message": "No file selected"}
-
-            elif not allowed_file(file.filename):
-                result = {"status": "ERROR", "message": "Only PNG, JPG, JPEG allowed"}
-
-            else:
-                filename = file.filename.replace(" ", "_")
-                filepath = os.path.join(UPLOAD_FOLDER, filename)
+            if file and file.filename != "":
+                filepath = os.path.join("static/uploads", file.filename)
                 file.save(filepath)
 
                 image_path = filepath
 
                 result = analyze_image(filepath)
 
-                time_now = datetime.now().strftime("%H:%M:%S")
-                result["time"] = time_now
-
                 session["history"].append({
-                    "file": filename,
-                    "status": result["status"],
+                    "file": file.filename,
+                    "status": result.get("status", "UNKNOWN"),
                     "score": result.get("security_score", 0),
-                    "time": time_now
+                    "time": datetime.now().strftime("%H:%M:%S")
                 })
 
                 session.modified = True
 
     except Exception as e:
         result = {
-            "status": "SAFE MODE ACTIVE",
-            "message": "System recovered safely",
-            "debug": str(e)
+            "status": "SAFE ERROR MODE",
+            "message": str(e)
         }
 
     return render_template(
         "dashboard.html",
-        user=user,
+        user=session["user"],
         result=result,
         image_path=image_path,
-        history=session.get("history", [])
+        history=session["history"]
     )
-
 
 # ---------------- PDF DOWNLOAD ----------------
 @app.route("/download")
