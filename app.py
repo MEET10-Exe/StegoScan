@@ -17,9 +17,9 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 total_scans = 0
 
 
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
+@app.route("/")
+def index():
+    return "<h1>THIS IS FLASK ACTIVE ROUTE</h1>"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
