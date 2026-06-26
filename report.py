@@ -4,20 +4,20 @@ import os
 
 def generate_pdf(user, history):
 
-    folder = "reports"
-    os.makedirs(folder, exist_ok=True)
-
-    file_path = os.path.join(folder, f"{user}_report.pdf")
+    os.makedirs("static", exist_ok=True)
+    file_path = os.path.join("static", f"{user}_report.pdf")
 
     c = canvas.Canvas(file_path, pagesize=letter)
 
-    c.drawString(50, 750, "STEGO SCAN REPORT")
+    c.drawString(50, 750, "🛡 STEGOSCAN REPORT")
     c.drawString(50, 730, f"USER: {user}")
 
     y = 700
 
-    if history:
-        for h in history[-15:]:
+    if not history:
+        c.drawString(50, y, "No scan history available")
+    else:
+        for h in history[-20:]:
             text = f"{h.get('time','')} | {h.get('file','')} | {h.get('status','')} | {h.get('score','')}"
             c.drawString(50, y, text)
             y -= 20
@@ -25,9 +25,6 @@ def generate_pdf(user, history):
             if y < 50:
                 c.showPage()
                 y = 750
-    else:
-        c.drawString(50, 700, "NO HISTORY FOUND")
 
     c.save()
-
     return file_path
