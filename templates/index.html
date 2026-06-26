@@ -97,7 +97,7 @@ input {
 <h3>IMAGE</h3>
 
 <!-- SAFE IMAGE PATH -->
-<img src="{{ image_path }}" width="250">
+<img src="{{ url_for('static', filename=image_path) }}" width="250">
 </div>
 {% endif %}
 

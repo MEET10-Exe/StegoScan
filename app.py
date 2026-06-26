@@ -1,29 +1,27 @@
 from flask import Flask, render_template, request, session, send_file
 import os
 from datetime import datetime
+
 from detector import analyze_image
 from report import generate_pdf
 
 app = Flask(__name__)
-app.secret_key = "stegoscan_final_fix"
+app.secret_key = "stegoscan_safe_mode"
 
 UPLOAD_FOLDER = "static/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# SAFE MEMORY STORE (NO SESSION LIST CRASH)
-history_store = {}
 
-
+# ---------------- HOME ROUTE ----------------
 @app.route("/", methods=["GET", "POST"])
 def dashboard():
 
+    # SAFE INIT
     if "user" not in session:
         session["user"] = "guest"
 
-    user = session["user"]
-
-    if user not in history_store:
-        history_store[user] = []
+    if "history" not in session:
+        session["history"] = []
 
     result = {}
     image_path = None
@@ -33,42 +31,59 @@ def dashboard():
             file = request.files.get("file")
 
             if file and file.filename != "":
-                filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+                filename = file.filename.replace(" ", "_")
+                filepath = os.path.join(UPLOAD_FOLDER, filename)
                 file.save(filepath)
 
-                image_path = filepath
+                # SAFE IMAGE PATH FOR HTML
+                image_path = "uploads/" + filename
 
+                # ANALYZE IMAGE
                 result = analyze_image(filepath)
 
-                history_store[user].append({
-                    "file": file.filename,
+                # SAFE HISTORY UPDATE
+                history = session["history"]
+                history.append({
+                    "file": filename,
                     "status": result.get("status", "UNKNOWN"),
                     "score": result.get("security_score", 0),
                     "time": datetime.now().strftime("%H:%M:%S")
                 })
 
+                session["history"] = history
+                session.modified = True
+
     except Exception as e:
         result = {
-            "status": "SAFE MODE",
+            "status": "SAFE MODE ACTIVE",
             "message": str(e)
         }
 
     return render_template(
         "dashboard.html",
-        user=user,
+        user=session["user"],
         result=result,
         image_path=image_path,
-        history=history_store[user]
+        history=session["history"]
     )
 
 
+# ---------------- PDF DOWNLOAD ----------------
 @app.route("/download")
 def download():
-    user = session.get("user", "guest")
-    file_path = generate_pdf(user, history_store.get(user, []))
+
+    if "history" not in session:
+        session["history"] = []
+
+    file_path = generate_pdf(
+        session.get("user", "guest"),
+        session.get("history", [])
+    )
+
     return send_file(file_path, as_attachment=True)
 
 
+# ---------------- RUN SERVER ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=False)
