@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from detector import analyze_image
 
 app = Flask(__name__)
+app.secret_key = "stegoscan_secret_key"
 
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
@@ -28,49 +29,44 @@ def index():
     result = None
     image_path = None
 
+    if "history" not in session:
+        session["history"] = []
+
     try:
         if request.method == "POST":
             file = request.files.get("file")
 
-            if not file or file.filename == "":
-                result = {"status": "ERROR", "message": "No file selected"}
-
-            elif not allowed_file(file.filename):
-                result = {"status": "ERROR", "message": "Only PNG, JPG, JPEG allowed"}
-
-            else:
+            if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
                 file.save(filepath)
 
                 image_path = filepath
-
                 total_scans += 1
 
-                try:
-                    result = analyze_image(filepath)
-                except Exception:
-                    result = {
-                        "status": "ERROR",
-                        "percentage": 0,
-                        "security_score": 0,
-                        "format": filename.split(".")[-1].upper(),
-                        "message": "Analysis failed safely"
-                    }
+                result = analyze_image(filepath)
+                result["time"] = datetime.now().strftime("%H:%M:%S")
 
-                result["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                session["history"].append({
+                    "file": filename,
+                    "status": result["status"],
+                    "time": result["time"]
+                })
 
-    except Exception:
-        result = {
-            "status": "SAFE MODE",
-            "message": "System recovered safely"
-        }
+                session.modified = True
+
+            else:
+                result = {"status": "ERROR", "message": "Invalid file"}
+
+    except Exception as e:
+        result = {"status": "SAFE MODE", "message": str(e)}
 
     return render_template(
         "index.html",
         result=result,
         image_path=image_path,
-        total_scans=total_scans
+        total_scans=total_scans,
+        history=session.get("history", [])
     )
 
 

@@ -2,135 +2,160 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>StegoScan Pro</title>
+<title>StegoScan X</title>
 
 <style>
 body {
-    background: radial-gradient(circle at top, #0b0f19, #05070d);
-    color: #00ffcc;
+    margin: 0;
     font-family: monospace;
+    background: #05070d;
+    color: #00ffcc;
+}
+
+.header {
+    padding: 20px;
+    text-align: center;
+    background: #0b0f19;
+    box-shadow: 0 0 10px #00ffcc33;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
     padding: 20px;
 }
 
-h1 {
-    text-shadow: 0 0 10px #00ffcc;
-}
-
 .card {
-    background: rgba(22, 27, 34, 0.9);
+    background: #0b0f19;
     padding: 15px;
-    margin-top: 15px;
-    border-radius: 12px;
     border: 1px solid #00ffcc33;
-    box-shadow: 0 0 15px #00ffcc22;
-    animation: fadeIn 0.6s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00ffcc22;
+    margin-bottom: 15px;
 }
 
 button {
     background: #00ffcc;
     border: none;
-    padding: 10px 20px;
-    font-weight: bold;
+    padding: 10px;
     cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background: #00ffaa;
-    box-shadow: 0 0 10px #00ffcc;
+    font-weight: bold;
 }
 
 input {
     padding: 10px;
-    background: #0b0f19;
+    background: black;
     color: #00ffcc;
     border: 1px solid #00ffcc33;
 }
 
 .bar {
     height: 12px;
-    background: linear-gradient(90deg, #00ffcc, #00ffaa);
+    background: linear-gradient(90deg,#00ffcc,#00ffaa);
     width: 0%;
-    transition: 1s ease;
-    border-radius: 5px;
-    box-shadow: 0 0 10px #00ffcc55;
+    transition: 1s;
 }
 
 .badge {
     padding: 5px 10px;
     border-radius: 5px;
-    font-weight: bold;
 }
 
-.HIGH { color: red; text-shadow: 0 0 5px red; }
-.MEDIUM { color: orange; text-shadow: 0 0 5px orange; }
-.LOW { color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
+.HIGH { color: red; }
+.MEDIUM { color: orange; }
+.LOW { color: #00ffcc; }
 
-.scan-glow {
+.glow {
     animation: glow 1.5s infinite alternate;
 }
 
 @keyframes glow {
-    from { box-shadow: 0 0 10px #00ffcc33; }
-    to { box-shadow: 0 0 25px #00ffcc99; }
+    from { box-shadow: 0 0 5px #00ffcc33; }
+    to { box-shadow: 0 0 20px #00ffcc99; }
+}
+
+.scan {
+    animation: scan 1s infinite;
+}
+
+@keyframes scan {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
 }
 </style>
 </head>
 
 <body>
 
-<h1 class="scan-glow">🛡 STEGOSCAN PRO</h1>
-<p>Cyber Security Scanner | AI Style Interface</p>
+<div class="header glow">
+    <h1>🛡 STEGOSCAN X DASHBOARD</h1>
+    <p>Total Scans: {{ total_scans }}</p>
+</div>
+
+<div class="container">
+
+<!-- LEFT -->
+<div>
+
+<div class="card scan">
+<h3>UPLOAD & SCAN</h3>
 
 <form method="POST" enctype="multipart/form-data">
     <input type="file" name="file" required>
-    <button type="submit">🔍 SCAN</button>
+    <button type="submit">SCAN IMAGE</button>
 </form>
+</div>
 
 {% if image_path %}
 <div class="card">
-    <h3>📁 IMAGE LOADED</h3>
-    <img src="/{{ image_path }}" width="250">
+<h3>IMAGE</h3>
+<img src="/{{ image_path }}" width="250">
 </div>
 {% endif %}
 
 {% if result %}
 <div class="card">
+<h3>RESULT</h3>
 
-    <h3>STATUS:
-        <span class="badge {{ result.status.split()[0] }}">
-            {{ result.status }}
-        </span>
-    </h3>
+<p>Status:
+<span class="badge {{ result.status.split()[0] }}">
+{{ result.status }}
+</span>
+</p>
 
-    {% if result.message %}
-        <p>{{ result.message }}</p>
-    {% endif %}
+<p>{{ result.message if result.message }}</p>
 
-    <p>RISK LEVEL: {{ result.percentage }}%</p>
+<p>Risk: {{ result.percentage }}%</p>
 
-    <div class="card">
-        <div class="bar" data-value="{{ result.percentage }}"></div>
-    </div>
+<div class="bar" data-value="{{ result.percentage }}"></div>
 
-    <p>SECURITY SCORE: {{ result.security_score }}/100</p>
+<p>Score: {{ result.security_score }}/100</p>
 
 </div>
 {% endif %}
 
+</div>
+
+<!-- RIGHT -->
+<div>
+
+<div class="card">
+<h3>SCAN HISTORY</h3>
+{% for h in history %}
+<p>📁 {{ h.file }} - {{ h.status }} - {{ h.time }}</p>
+{% endfor %}
+</div>
+
+</div>
+
+</div>
+
 <script>
-document.querySelectorAll(".bar").forEach(b => {
-    let v = parseFloat(b.dataset.value || 0);
-    if (v < 0) v = 0;
-    if (v > 100) v = 100;
-    setTimeout(() => {
-        b.style.width = v + "%";
-    }, 300);
+document.querySelectorAll(".bar").forEach(b=>{
+let v=parseFloat(b.dataset.value||0);
+setTimeout(()=>{b.style.width=v+"%";},300);
 });
 </script>
 
