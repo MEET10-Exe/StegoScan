@@ -17,14 +17,13 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 total_scans = 0
 
 
+@app.route("/home")
+def home():
+    return "home"
+
 @app.route("/")
 def index():
-    return "<h1>THIS IS FLASK ACTIVE ROUTE</h1>"
-
-@app.route("/", methods=["GET", "POST"])
-def index():
-    global total_scans
-
+    return render_template("index.html")
     result = {}
     image_path = None
 
