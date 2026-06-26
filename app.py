@@ -9,7 +9,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
-os.makedirs("static/uploads", exist_ok=True)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
@@ -25,15 +25,13 @@ def allowed_file(filename):
 def index():
     global total_scans
 
-    result = None
+    result = {}
     image_path = None
 
     try:
         if request.method == "POST":
-
             file = request.files.get("file")
 
-            # SAFE CHECK 1
             if not file or file.filename == "":
                 result = {"status": "ERROR", "message": "No file selected"}
 
@@ -43,14 +41,12 @@ def index():
             else:
                 filename = secure_filename(file.filename)
                 filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-
                 file.save(filepath)
 
                 image_path = os.path.join("static/uploads", filename)
 
                 total_scans += 1
 
-                # 🔥 SAFE DETECTOR CALL (IMPORTANT)
                 try:
                     result = analyze_image(filepath)
                 except Exception:
@@ -65,10 +61,9 @@ def index():
                 result["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     except Exception:
-        # NEVER CRASH PAGE
         result = {
             "status": "SAFE MODE",
-            "message": "System handled unexpected error safely"
+            "message": "System recovered from error safely"
         }
 
     return render_template(
