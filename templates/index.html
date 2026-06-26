@@ -2,67 +2,99 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>StegoScan SaaS</title>
+<title>StegoScan Pro</title>
 
 <style>
 body {
-    background: #0b0f19;
-    color: white;
-    font-family: Arial;
+    background: radial-gradient(circle at top, #0b0f19, #05070d);
+    color: #00ffcc;
+    font-family: monospace;
     padding: 20px;
 }
 
+h1 {
+    text-shadow: 0 0 10px #00ffcc;
+}
+
 .card {
-    background: #161b22;
+    background: rgba(22, 27, 34, 0.9);
     padding: 15px;
     margin-top: 15px;
     border-radius: 12px;
+    border: 1px solid #00ffcc33;
+    box-shadow: 0 0 15px #00ffcc22;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 button {
     background: #00ffcc;
     border: none;
-    padding: 10px;
-    cursor: pointer;
+    padding: 10px 20px;
     font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #00ffaa;
+    box-shadow: 0 0 10px #00ffcc;
 }
 
 input {
     padding: 10px;
+    background: #0b0f19;
+    color: #00ffcc;
+    border: 1px solid #00ffcc33;
 }
 
 .bar {
-    height: 10px;
-    background: #00ffcc;
+    height: 12px;
+    background: linear-gradient(90deg, #00ffcc, #00ffaa);
     width: 0%;
-    transition: 0.5s;
+    transition: 1s ease;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #00ffcc55;
 }
 
 .badge {
     padding: 5px 10px;
     border-radius: 5px;
-    display: inline-block;
+    font-weight: bold;
 }
 
-.HIGH { background: red; }
-.MEDIUM { background: orange; }
-.LOW { background: green; }
+.HIGH { color: red; text-shadow: 0 0 5px red; }
+.MEDIUM { color: orange; text-shadow: 0 0 5px orange; }
+.LOW { color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
+
+.scan-glow {
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 10px #00ffcc33; }
+    to { box-shadow: 0 0 25px #00ffcc99; }
+}
 </style>
 </head>
 
 <body>
 
-<h1>🛡 StegoScan SaaS</h1>
-<p>Total Scans: {{ total_scans }}</p>
+<h1 class="scan-glow">🛡 STEGOSCAN PRO</h1>
+<p>Cyber Security Scanner | AI Style Interface</p>
 
 <form method="POST" enctype="multipart/form-data">
     <input type="file" name="file" required>
-    <button type="submit">SCAN</button>
+    <button type="submit">🔍 SCAN</button>
 </form>
 
 {% if image_path %}
 <div class="card">
-    <h3>Uploaded Image</h3>
+    <h3>📁 IMAGE LOADED</h3>
     <img src="/{{ image_path }}" width="250">
 </div>
 {% endif %}
@@ -70,7 +102,7 @@ input {
 {% if result %}
 <div class="card">
 
-    <h3>Status:
+    <h3>STATUS:
         <span class="badge {{ result.status.split()[0] }}">
             {{ result.status }}
         </span>
@@ -80,11 +112,13 @@ input {
         <p>{{ result.message }}</p>
     {% endif %}
 
-    <p>Risk: {{ result.percentage }}%</p>
+    <p>RISK LEVEL: {{ result.percentage }}%</p>
 
-    <p>Score: {{ result.security_score }}/100</p>
+    <div class="card">
+        <div class="bar" data-value="{{ result.percentage }}"></div>
+    </div>
 
-    <div class="bar" data-value="{{ result.percentage }}"></div>
+    <p>SECURITY SCORE: {{ result.security_score }}/100</p>
 
 </div>
 {% endif %}
@@ -94,7 +128,9 @@ document.querySelectorAll(".bar").forEach(b => {
     let v = parseFloat(b.dataset.value || 0);
     if (v < 0) v = 0;
     if (v > 100) v = 100;
-    b.style.width = v + "%";
+    setTimeout(() => {
+        b.style.width = v + "%";
+    }, 300);
 });
 </script>
 
