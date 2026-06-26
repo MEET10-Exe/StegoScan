@@ -17,14 +17,15 @@ app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 total_scans = 0
 
 
-@app.route("/home")
-def home():
-    return "home"
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/")
+
+@app.route("/", methods=["GET", "POST"])
 def index():
-    return render_template("index.html")
-    result = {}
+    global total_scans
+
+    result = None
     image_path = None
 
     try:
@@ -42,7 +43,7 @@ def index():
                 filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
                 file.save(filepath)
 
-                image_path = os.path.join("static/uploads", filename)
+                image_path = filepath
 
                 total_scans += 1
 
@@ -62,7 +63,7 @@ def index():
     except Exception:
         result = {
             "status": "SAFE MODE",
-            "message": "System recovered from error safely"
+            "message": "System recovered safely"
         }
 
     return render_template(

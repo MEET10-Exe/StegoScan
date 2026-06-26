@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+<head>
 <meta charset="UTF-8">
 <title>StegoScan SaaS</title>
 
 <style>
 body {
     background: #0b0f19;
-    color: #ffffff;
+    color: white;
     font-family: Arial;
-    margin: 0;
     padding: 20px;
 }
 
@@ -18,7 +17,6 @@ body {
     padding: 15px;
     margin-top: 15px;
     border-radius: 12px;
-    box-shadow: 0 0 10px #00ffcc33;
 }
 
 button {
@@ -65,7 +63,7 @@ input {
 {% if image_path %}
 <div class="card">
     <h3>Uploaded Image</h3>
-    <img src="{{ image_path }}" width="250">
+    <img src="/{{ image_path }}" width="250">
 </div>
 {% endif %}
 
@@ -73,34 +71,31 @@ input {
 <div class="card">
 
     <h3>Status:
-        <span class="badge {{ result.status.split()[0] if result.status }}">
+        <span class="badge {{ result.status.split()[0] }}">
             {{ result.status }}
         </span>
     </h3>
 
-    <p>{{ result.message if result.message }}</p>
+    {% if result.message %}
+        <p>{{ result.message }}</p>
+    {% endif %}
 
-    <p>Risk: {{ result.percentage if result.percentage }}%</p>
+    <p>Risk: {{ result.percentage }}%</p>
 
-    <p>Score: {{ result.security_score if result.security_score }}/100</p>
+    <p>Score: {{ result.security_score }}/100</p>
 
-    <div class="bar"
-         data-value="{{ result.percentage | default(0) }}"></div>
+    <div class="bar" data-value="{{ result.percentage }}"></div>
 
 </div>
 {% endif %}
 
 <script>
-try {
-    document.querySelectorAll(".bar").forEach(b => {
-        let v = parseFloat(b.dataset.value || 0);
-        if (v < 0) v = 0;
-        if (v > 100) v = 100;
-        b.style.width = v + "%";
-    });
-} catch(e) {
-    console.log("safe UI mode");
-}
+document.querySelectorAll(".bar").forEach(b => {
+    let v = parseFloat(b.dataset.value || 0);
+    if (v < 0) v = 0;
+    if (v > 100) v = 100;
+    b.style.width = v + "%";
+});
 </script>
 
 </body>

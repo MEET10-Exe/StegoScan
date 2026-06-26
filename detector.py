@@ -8,11 +8,9 @@ def analyze_image(image_path):
 
         width, height = image.size
 
-        # Better analysis (improved logic)
         mean_pixel = np.mean(img_array)
         std_pixel = np.std(img_array)
 
-        # fake stego risk scoring (improved heuristic)
         risk = (std_pixel / 128) * 100
 
         if risk > 60:
