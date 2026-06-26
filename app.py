@@ -78,13 +78,14 @@ def dashboard():
                 )
 
                 filepath = os.path.join(
+                    app.root_path,
                     app.config["UPLOAD_FOLDER"],
                     unique_name
                 )
 
                 file.save(filepath)
 
-                image_path = "uploads/" + unique_name
+                image_path = f"uploads/{unique_name}"
 
                 try:
 

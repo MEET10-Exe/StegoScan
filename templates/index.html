@@ -108,8 +108,13 @@ SCAN
 
 <h2>Uploaded Image</h2>
 
-<img
+<img src="{{url_for('static',filename=image_path)}}">
+  width="300">
+  onerror="this.style.display='none'">
+   
+
 src="{{url_for('static',filename=image_path)}}">
+
 
 </div>
 
