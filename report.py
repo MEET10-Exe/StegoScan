@@ -2,29 +2,67 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import os
 
-def generate_pdf(user, history):
 
-    os.makedirs("static", exist_ok=True)
-    file_path = os.path.join("static", f"{user}_report.pdf")
+def generate_pdf(user,history):
 
-    c = canvas.Canvas(file_path, pagesize=letter)
+    os.makedirs(
+        "static",
+        exist_ok=True
+    )
 
-    c.drawString(50, 750, "🛡 STEGOSCAN REPORT")
-    c.drawString(50, 730, f"USER: {user}")
+    file_path=f"static/{user}_report.pdf"
 
-    y = 700
+    c=canvas.Canvas(
+        file_path,
+        pagesize=letter
+    )
+
+    c.drawString(
+        50,
+        780,
+        "STEGOSCAN REPORT"
+    )
+
+    c.drawString(
+        50,
+        760,
+        f"User: {user}"
+    )
+
+    y=720
 
     if not history:
-        c.drawString(50, y, "No scan history available")
-    else:
-        for h in history[-20:]:
-            text = f"{h.get('time','')} | {h.get('file','')} | {h.get('status','')} | {h.get('score','')}"
-            c.drawString(50, y, text)
-            y -= 20
 
-            if y < 50:
+        c.drawString(
+            50,
+            y,
+            "No scan history"
+        )
+
+    else:
+
+        for h in history:
+
+            text=f"""
+{h['time']}
+{h['file']}
+{h['status']}
+Score:{h['score']}
+"""
+
+            c.drawString(
+                50,
+                y,
+                text[:80]
+            )
+
+            y-=30
+
+            if y<50:
+
                 c.showPage()
-                y = 750
+                y=780
 
     c.save()
+
     return file_path

@@ -1,7 +1,7 @@
-
-flask
-gunicorn
+flask==3.0.3
+gunicorn==22.0.0
 numpy
 pillow
 opencv-python-headless
 reportlab
+Werkzeug
