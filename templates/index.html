@@ -1,109 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>StegoScan X</title>
-    <style>
-        body {
-            background: #0d1117;
-            color: #e6edf3;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
+<title>Login - StegoScan SaaS</title>
 
-        h1 {
-            color: #00ccff;
-        }
+<style>
+body {
+    margin: 0;
+    background: #0b0f19;
+    font-family: Arial;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-        .card {
-            background: #161b22;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0, 255, 153, 0.2);
-        }
+.box {
+    background: #161b22;
+    padding: 30px;
+    border-radius: 15px;
+    width: 300px;
+    box-shadow: 0 0 20px #00ffcc33;
+    text-align: center;
+}
 
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #00ff99, #00ccff);
-            color: #0d1117;
-            font-weight: bold;
-            transition: 0.3s;
-        }
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background: black;
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+}
 
-        button:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
-
-        input[type="file"] {
-            margin-bottom: 10px;
-        }
-
-        img {
-            max-width: 300px;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        .safe { color: lime; }
-        .medium { color: orange; }
-        .danger { color: red; }
-
-        .progress {
-            height: 20px;
-            background: #333;
-            border-radius: 20px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-
-        .bar {
-            height: 100%;
-            background: linear-gradient(90deg, #00ff99, #00ccff);
-            width: 0%;
-            transition: width 1s ease-in-out;
-        }
-
-        .history-item {
-            padding: 5px 0;
-            border-bottom: 1px solid #333;
-        }
-    </style>
+button {
+    width: 100%;
+    padding: 10px;
+    background: #00ffcc;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+</style>
 </head>
+
 <body>
 
-    <h1>🛡 STEGOSCAN X</h1>
-    <p>Total scans: {{ history|length }}</p>
+<div class="box">
+    <h2>🛡 StegoScan Login</h2>
 
-    <a href="/download">
-        <button>⬇ Download PDF Report</button>
-    </a>
+    <form method="POST">
+        <input type="text" name="username" placeholder="Enter Username" required>
+        <button type="submit">Login</button>
+    </form>
+</div>
 
-    {% if error %}
-    <div class="card danger">
-        ❌ {{ error }}
-    </div>
-    {% endif %}
-
-    <!-- Upload Form -->
-    <div class="card">
-        <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" required>
-            <button>🔍 Scan</button>
-        </form>
-    </div>
-
-    <!-- Uploaded Image -->
-    {% if image_path %}
-    <div class="card">
-        <h2>Uploaded Image</h2>
-        <img src="{{ url_for('static', filename=image_path) }}" alt="Uploaded Image">
-    </div>
-    {% endif %}
-
-    <!-- Scan Result -->
-    {% if result
+</body>
+</html>
