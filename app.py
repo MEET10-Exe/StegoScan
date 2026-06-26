@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import os
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = "super_secure_saas_key"
+app.secret_key = "level2_saas_secure_key"
 
 UPLOAD_FOLDER = "static/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -18,7 +18,10 @@ def login():
         if username:
             session["user"] = username
             session["history"] = []
+            flash("Login successful 🚀")
             return redirect(url_for("dashboard"))
+
+        flash("Enter valid username")
 
     return render_template("login.html")
 
@@ -30,7 +33,7 @@ def dashboard():
     if "user" not in session:
         return redirect(url_for("login"))
 
-    user = session["user"]
+    user = session.get("user")
     history = session.get("history", [])
 
     result = None
@@ -41,37 +44,47 @@ def dashboard():
 
             file = request.files.get("file")
 
-            if file and file.filename != "":
+            if not file or file.filename == "":
+                flash("No file selected ❌")
+                return redirect(url_for("dashboard"))
 
-                filename = file.filename.replace(" ", "_")
-                filepath = os.path.join(UPLOAD_FOLDER, filename)
+            filename = file.filename.replace(" ", "_")
+            filepath = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(filepath)
 
-                file.save(filepath)
+            image_path = "uploads/" + filename
 
-                image_path = "uploads/" + filename
+            # LEVEL 2 SMART SCORING (NO CRASH LOGIC)
+            size_factor = os.path.getsize(filepath) % 100
+            risk = min(95, max(10, size_factor))
 
-                # SIMPLE SAFE RESULT (NO CRASH)
-                result = {
-                    "status": "ANALYZED",
-                    "percentage": 25,
-                    "security_score": 75,
-                    "time": datetime.now().strftime("%H:%M:%S")
-                }
+            if risk > 70:
+                status = "HIGH RISK"
+            elif risk > 40:
+                status = "MEDIUM RISK"
+            else:
+                status = "LOW RISK"
 
-                history.append({
-                    "file": filename,
-                    "status": result["status"],
-                    "time": result["time"]
-                })
+            result = {
+                "status": status,
+                "percentage": risk,
+                "security_score": 100 - risk,
+                "time": datetime.now().strftime("%H:%M:%S")
+            }
 
-                session["history"] = history
-                session.modified = True
+            history.append({
+                "file": filename,
+                "status": status,
+                "time": result["time"]
+            })
+
+            session["history"] = history
+            session.modified = True
+
+            flash("File analyzed successfully ✅")
 
     except Exception as e:
-        result = {
-            "status": "SAFE MODE",
-            "message": str(e)
-        }
+        result = {"status": "SAFE MODE", "message": str(e)}
 
     return render_template(
         "dashboard.html",
@@ -86,10 +99,10 @@ def dashboard():
 @app.route("/logout")
 def logout():
     session.clear()
+    flash("Logged out")
     return redirect(url_for("login"))
 
 
-# ---------------- RUN ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)

@@ -2,31 +2,34 @@
 <html>
 <head>
 <title>Login</title>
+
 <style>
 body{
-background:#0b0f19;
+margin:0;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+background:linear-gradient(135deg,#0b0f19,#111827);
 font-family:Arial;
 color:white;
 }
 
 .box{
-background:#161b22;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
 padding:30px;
 border-radius:15px;
 width:300px;
+box-shadow:0 0 25px #00ffcc22;
 text-align:center;
-box-shadow:0 0 20px #00ffcc33;
 }
 
 input{
 width:100%;
 padding:10px;
-margin:10px 0;
-background:black;
+margin-top:10px;
+background:transparent;
 border:1px solid #00ffcc;
 color:#00ffcc;
 }
@@ -34,6 +37,7 @@ color:#00ffcc;
 button{
 width:100%;
 padding:10px;
+margin-top:10px;
 background:#00ffcc;
 border:none;
 font-weight:bold;
@@ -45,10 +49,10 @@ cursor:pointer;
 <body>
 
 <div class="box">
-<h2>🛡 SaaS Login</h2>
+<h2>🛡 StegoScan SaaS</h2>
 
 <form method="POST">
-<input name="username" placeholder="Enter name" required>
+<input name="username" placeholder="Enter username" required>
 <button>LOGIN</button>
 </form>
 
