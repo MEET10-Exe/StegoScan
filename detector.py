@@ -1,14 +1,12 @@
 from PIL import Image
 import numpy as np
 
-def analyze_image(image_path):
-
+def analyze_image(path):
     try:
-        image = Image.open(image_path).convert("RGB")
-        arr = np.array(image)
+        img = Image.open(path).convert("RGB")
+        arr = np.array(img)
 
-        std = np.std(arr)
-        risk = (std / 128) * 100
+        risk = float(np.std(arr)) / 128 * 100
 
         if risk > 60:
             status = "HIGH RISK"
@@ -23,9 +21,9 @@ def analyze_image(image_path):
             "security_score": round(100 - risk, 2)
         }
 
-    except Exception as e:
+    except:
         return {
-            "status": "ERROR",
+            "status": "ERROR SAFE MODE",
             "percentage": 0,
             "security_score": 0
         }

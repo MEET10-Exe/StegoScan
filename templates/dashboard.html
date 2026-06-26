@@ -1,37 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>StegoScan X</title>
+<title>Dashboard</title>
+
+<style>
+body{
+margin:0;
+background:#0b0f19;
+font-family:Arial;
+color:white;
+}
+
+.nav{
+display:flex;
+justify-content:space-between;
+padding:15px;
+background:#161b22;
+}
+
+.container{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:15px;
+padding:20px;
+}
+
+.card{
+background:#161b22;
+padding:15px;
+border-radius:10px;
+box-shadow:0 0 10px #00ffcc22;
+}
+
+button{
+background:#00ffcc;
+border:none;
+padding:10px;
+font-weight:bold;
+cursor:pointer;
+}
+
+input{
+padding:10px;
+background:black;
+color:#00ffcc;
+border:1px solid #00ffcc;
+}
+</style>
 </head>
 
 <body>
 
-<h1>🛡 StegoScan Dashboard</h1>
+<div class="nav">
+<div>🛡 StegoScan SaaS</div>
+<div>{{ user }} | <a href="/logout" style="color:red;">Logout</a></div>
+</div>
 
-<p>Total Scans: {{ history|length }}</p>
+<div class="container">
+
+<div class="card">
+
+<h3>Upload File</h3>
 
 <form method="POST" enctype="multipart/form-data">
-    <input type="file" name="file" required>
-    <button type="submit">SCAN</button>
+<input type="file" name="file" required>
+<button>SCAN</button>
 </form>
 
 {% if image_path %}
-    <h3>Uploaded Image</h3>
-    <img src="{{ image_path }}" width="250">
+<h3>Image</h3>
+<img src="{{ image_path }}" width="200">
 {% endif %}
 
 {% if result %}
-    <h3>Status: {{ result.get('status', 'UNKNOWN') }}</h3>
-    <p>Risk: {{ result.get('percentage', 0) }}%</p>
-    <p>Score: {{ result.get('security_score', 0) }}</p>
+<h3>Status: {{ result.status }}</h3>
+<p>Score: {{ result.security_score }}</p>
 {% endif %}
+
+</div>
+
+<div class="card">
 
 <h3>History</h3>
 
 {% for h in history %}
-    <p>{{ h.file }} - {{ h.status }} - {{ h.time }}</p>
+<p>{{ h.file }} - {{ h.status }} - {{ h.time }}</p>
 {% endfor %}
+
+</div>
+
+</div>
 
 </body>
 </html>
