@@ -1,38 +1,10 @@
-from flask import Flask, render_template, request, session, redirect, url_for, send_file
-import os
-from datetime import datetime
-
-from detector import analyze_image
-from report import generate_pdf
-
-app = Flask(__name__)
-app.secret_key = "stegoscan_final_key"
-
-UPLOAD_FOLDER = "static/uploads"
-REPORT_FOLDER = "reports"
-
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(REPORT_FOLDER, exist_ok=True)
-
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
-
-
-# ---------------- FILE CHECK ----------------
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-# ---------------- DASHBOARD ----------------
 @app.route("/", methods=["GET", "POST"])
 def dashboard():
 
-    result = None
+    result = {}
     image_path = None
 
-    # SAFE SESSION HANDLING
+    # SAFE SESSION INIT
     if "user" not in session:
         session["user"] = "guest"
 
@@ -51,6 +23,9 @@ def dashboard():
 
                 result = analyze_image(filepath)
 
+                if not result:
+                    result = {}
+
                 session["history"].append({
                     "file": file.filename,
                     "status": result.get("status", "UNKNOWN"),
@@ -62,7 +37,7 @@ def dashboard():
 
     except Exception as e:
         result = {
-            "status": "SAFE ERROR MODE",
+            "status": "SAFE MODE ACTIVE",
             "message": str(e)
         }
 
@@ -73,26 +48,3 @@ def dashboard():
         image_path=image_path,
         history=session["history"]
     )
-
-# ---------------- PDF DOWNLOAD ----------------
-@app.route("/download")
-def download():
-    file_path = generate_pdf(session["user"], session.get("history", []))
-
-    if os.path.exists(file_path):
-        return send_file(file_path, as_attachment=True)
-
-    return "PDF not found", 404
-
-
-# ---------------- LOGOUT ----------------
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect("/")
-
-
-# ---------------- RUN ----------------
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=False)
