@@ -9,7 +9,7 @@ app = Flask(__name__)
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs("static/uploads", exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
