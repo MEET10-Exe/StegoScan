@@ -1,128 +1,144 @@
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    background:#0d1117;
-    color:white;
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    line-height: 1.6;
 }
 
-header{
-    text-align:center;
-    padding:40px 20px;
+/* Header */
+header {
+    text-align: center;
+    padding: 40px 20px;
+}
+header h1 {
+    color: #00ff99;
+    font-size: 3.5rem;
+    text-shadow: 0 0 20px #00ff99, 0 0 40px #00ccff;
+    margin-bottom: 10px;
+}
+.subtitle {
+    font-size: 1.2rem;
+    color: #ccc;
+}
+.author {
+    color: #888;
+    font-style: italic;
 }
 
-header h1{
-    color:#00ff99;
-    font-size:4rem;
-    text-shadow:0 0 20px #00ff99;
+/* Main Layout */
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
 }
 
-.subtitle{
-    font-size:1.3rem;
+/* Upload Form */
+form {
+    background: #161b22;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 255, 153, .4);
+    margin-bottom: 30px;
+    text-align: center;
+}
+.file-upload {
+    display: inline-block;
+    padding: 15px 25px;
+    border: 2px dashed #00ff99;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.file-upload:hover {
+    background: rgba(0, 255, 153, 0.1);
+}
+.file-upload input {
+    display: none;
+}
+.scan-btn {
+    margin-left: 15px;
+    padding: 15px 35px;
+    background: linear-gradient(90deg, #00ff99, #00ccff);
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #0d1117;
+}
+.scan-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
 }
 
-.author{
-    color:#ccc;
-}
-
-main{
-    max-width:1200px;
-    margin:auto;
-    padding:20px;
-}
-
-form{
-    background:#161b22;
-    padding:30px;
-    border-radius:20px;
-    box-shadow:0 0 25px rgba(0,255,153,.4);
-    margin-bottom:30px;
-}
-
-.file-upload{
-    display:inline-block;
-    padding:15px 25px;
-    border:2px dashed #00ff99;
-    border-radius:12px;
-    cursor:pointer;
-}
-
-.file-upload input{
-    display:none;
-}
-
-.scan-btn{
-    margin-left:15px;
-    padding:15px 35px;
-    background:#00ff99;
-    border:none;
-    border-radius:10px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.scan-btn:hover{
-    transform:scale(1.05);
-}
-
+/* Cards */
 .preview-card,
 .result-card,
-.stats{
-    background:#161b22;
-    padding:25px;
-    border-radius:20px;
-    margin-top:25px;
-    box-shadow:0 0 20px rgba(0,255,153,.25);
+.stats {
+    background: #161b22;
+    padding: 25px;
+    border-radius: 20px;
+    margin-top: 25px;
+    box-shadow: 0 0 20px rgba(0, 255, 153, .25);
+}
+.preview-img {
+    max-width: 100%;
+    border-radius: 15px;
+    margin-top: 15px;
+    display: block;
 }
 
-.preview-img{
-    max-width:400px;
-    border-radius:15px;
-    margin-top:15px;
+/* Progress Bar */
+.progress {
+    width: 100%;
+    background: #222;
+    height: 25px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+.bar {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff99, #00ccff);
+    width: 0%;
+    transition: width 1s ease-in-out;
 }
 
-.progress{
-    width:100%;
-    background:#222;
-    height:25px;
-    border-radius:20px;
-    overflow:hidden;
-    margin:15px 0;
-}
+/* Risk Colors */
+.safe { color: #00ff99; font-weight: bold; }
+.medium { color: orange; font-weight: bold; }
+.danger { color: red; font-weight: bold; }
 
-.bar{
-    height:100%;
-    background:linear-gradient(
-        90deg,
-        #00ff99,
-        #00ccff
-    );
-}
-
-.safe{
-    color:#00ff99;
-    font-weight:bold;
-}
-
-.medium{
-    color:orange;
-    font-weight:bold;
-}
-
-.danger{
-    color:red;
-    font-weight:bold;
-}
-
+/* Section Titles */
 .stats h2,
 .result-card h2,
-.preview-card h2{
-    color:#00ff99;
+.preview-card h2 {
+    color: #00ff99;
+    margin-bottom: 10px;
 }
 
-footer{
-    text-align:center;
-    padding:25px;
-    margin-top:40px;
-    color:#888;
+/* Footer */
+footer {
+    text-align: center;
+    padding: 25px;
+    margin-top: 40px;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2.5rem;
+    }
+    .scan-btn {
+        margin-top: 15px;
+        display: block;
+        width: 100%;
+    }
+    .file-upload {
+        display: block;
+        margin-bottom: 15px;
+    }
 }

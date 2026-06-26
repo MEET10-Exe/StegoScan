@@ -1,212 +1,109 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>StegoScan X</title>
+    <meta charset="UTF-8">
+    <title>StegoScan X</title>
+    <style>
+        body {
+            background: #0d1117;
+            color: #e6edf3;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
 
-<style>
+        h1 {
+            color: #00ccff;
+        }
 
-body{
-background:#0d1117;
-color:white;
-font-family:Arial;
-padding:20px;
-}
+        .card {
+            background: #161b22;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 153, 0.2);
+        }
 
-.card{
-background:#161b22;
-padding:20px;
-margin-bottom:20px;
-border-radius:15px;
-}
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #00ff99, #00ccff);
+            color: #0d1117;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
-button{
-padding:10px;
-cursor:pointer;
-}
+        button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
 
-img{
-max-width:300px;
-border-radius:10px;
-}
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
 
-.safe{
-color:lime;
-}
+        img {
+            max-width: 300px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
 
-.medium{
-color:orange;
-}
+        .safe { color: lime; }
+        .medium { color: orange; }
+        .danger { color: red; }
 
-.danger{
-color:red;
-}
+        .progress {
+            height: 20px;
+            background: #333;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
 
-.progress{
-height:20px;
-background:#333;
-border-radius:20px;
-overflow:hidden;
-}
+        .bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff99, #00ccff);
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
 
-.bar{
-height:100%;
-background:linear-gradient(
-90deg,
-#00ff99,
-#00ccff
-);
-
-width:0%;
-transition:1s;
-}
-
-</style>
-
+        .history-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+    </style>
 </head>
-
 <body>
 
-<h1>🛡 STEGOSCAN X</h1>
+    <h1>🛡 STEGOSCAN X</h1>
+    <p>Total scans: {{ history|length }}</p>
 
-<p>Total scans: {{history|length}}</p>
+    <a href="/download">
+        <button>⬇ Download PDF Report</button>
+    </a>
 
-<a href="/download">
-<button>
-Download PDF
-</button>
-</a>
+    {% if error %}
+    <div class="card danger">
+        ❌ {{ error }}
+    </div>
+    {% endif %}
 
-{% if error %}
-<div class="card">
-❌ {{error}}
-</div>
-{% endif %}
+    <!-- Upload Form -->
+    <div class="card">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button>🔍 Scan</button>
+        </form>
+    </div>
 
-<div class="card">
+    <!-- Uploaded Image -->
+    {% if image_path %}
+    <div class="card">
+        <h2>Uploaded Image</h2>
+        <img src="{{ url_for('static', filename=image_path) }}" alt="Uploaded Image">
+    </div>
+    {% endif %}
 
-<form method="POST"
-enctype="multipart/form-data">
-
-<input
-type="file"
-name="file"
-required>
-
-<button>
-SCAN
-</button>
-
-</form>
-
-</div>
-
-
-{% if image_path %}
-
-<div class="card">
-
-<h2>Uploaded Image</h2>
-
-<img src="{{url_for('static',filename=image_path)}}">
-  width="300">
-  onerror="this.style.display='none'">
-   
-
-src="{{url_for('static',filename=image_path)}}">
-
-
-</div>
-
-{% endif %}
-
-
-{% if result %}
-
-<div class="card">
-
-<h2>Result</h2>
-
-<p>
-Status:
-{{result.get("status","UNKNOWN")}}
-</p>
-
-<p>
-Message:
-{{result.get("message","")}}
-</p>
-
-<p>
-Risk:
-{{result.get("percentage",0)}}%
-</p>
-
-<div class="progress">
-<div
-class="bar"
-data-width="{{result.get('percentage',0)}}">
-</div>
-</div>
-
-<p>
-Score:
-{{result.get("security_score",0)}}/100
-</p>
-
-</div>
-
-{% endif %}
-
-<div class="card">
-
-<h2>History</h2>
-
-{% for h in history %}
-
-<p>
-
-{{h.file}}
-|
-{{h.status}}
-|
-{{h.time}}
-
-</p>
-
-{% endfor %}
-
-</div>
-
-<script>
-
-document.querySelectorAll(".bar")
-.forEach(
-x=>{
-
-let w=parseFloat(
-x.dataset.width
-)
-
-if(w<0){
-w=0
-}
-
-if(w>100){
-w=100
-}
-
-setTimeout(
-()=>{
-x.style.width=w+"%"
-},
-300
-)
-
-}
-)
-
-</script>
-
-</body>
-</html>
+    <!-- Scan Result -->
+    {% if result
